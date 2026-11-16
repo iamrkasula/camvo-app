@@ -1,0 +1,157 @@
+/* Camvo site. The app's own world: camcorder black, label cream, tape-box green, REC red; VT323 for the camcorder
+   display, Permanent Marker for tape labels (both bundled, licences in assets/). No external fonts, scripts or
+   trackers. Light mode is the label-cream paper of a tape box; dark mode is the camcorder body. */
+@font-face { font-family: "VT323"; src: url("assets/VT323-Regular.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "Marker"; src: url("assets/PermanentMarker-Regular.ttf") format("truetype"); font-display: swap; }
+
+:root {
+  --bg: #efe5c9;          /* label cream: the tape box */
+  --bg-2: #e6d9b5;
+  --panel: #f7f0dc;
+  --ink: #151812;
+  --ink-2: #3f4538;
+  --rule: #c9bb93;
+  --green: #1f6b47;
+  --rec: #b3261a;
+  --amber-ink: #7a4f00;
+  --osd: #151812;
+  --body: #0b0d0b;        /* camcorder body, used for frames in both modes */
+  --cream: #efe5c9;
+  --vhs: #e36a3e; --s8: #e9b53d; --hi8: #c9a36b; --t04: #78a3e6;
+  --ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  --vt: "VT323", ui-monospace, Menlo, monospace;
+  --mk: "Marker", "Marker Felt", "Comic Sans MS", cursive;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b0d0b; --bg-2: #111511; --panel: #151915; --ink: #f2eee3; --ink-2: #a9ae9f; --rule: #2c342d;
+    --green: #63c493; --rec: #ff6b5e; --amber-ink: #f0b43c; --osd: #f2eee3;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+    --bg: #0b0d0b; --bg-2: #111511; --panel: #151915; --ink: #f2eee3; --ink-2: #a9ae9f; --rule: #2c342d;
+    --green: #63c493; --rec: #ff6b5e; --amber-ink: #f0b43c; --osd: #f2eee3;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.55 var(--ui); overflow-x: hidden; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--green); text-underline-offset: 3px; }
+a:focus-visible, .btn:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.vt { font-family: var(--vt); letter-spacing: .04em; }
+.rec-dot { display: inline-block; width: .62em; height: .62em; border-radius: 50%; background: var(--rec); margin-right: .45em; vertical-align: .05em; }
+
+/* Bar */
+.bar { border-bottom: 1px solid var(--rule); }
+.bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font: 26px/1 var(--mk); }
+.brand img { width: 36px; height: 36px; border-radius: 9px; }
+.bar nav { display: flex; gap: 6px; }
+.bar nav a { color: var(--ink); text-decoration: none; font: 22px/1 var(--vt); padding: 10px 10px; min-height: 44px; display: inline-flex; align-items: center; }
+.bar nav a:hover, .bar nav a[aria-current] { text-decoration: underline; }
+
+/* Hero: a camcorder viewfinder beside a tape label */
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 48px; align-items: center; padding-top: 56px; padding-bottom: 64px; }
+.osd-line { font: 26px/1 var(--vt); color: var(--osd); display: flex; gap: 18px; flex-wrap: wrap; margin: 0 0 22px; }
+.label { display: inline-block; background: var(--cream); color: #151812; transform: rotate(-2deg); padding: 14px 26px 8px; border-top: 12px solid var(--vhs);
+  box-shadow: 0 10px 24px rgba(0,0,0,.18); margin: 0 0 26px; }
+.label .name { font: 64px/1 var(--mk); display: block; }
+h1 { font: 800 clamp(34px, 5.4vw, 58px)/1.05 var(--ui); letter-spacing: -.02em; margin: 0 0 16px; text-wrap: balance; }
+.lede { font-size: clamp(18px, 2vw, 21px); color: var(--ink-2); margin: 0 0 26px; max-width: 34ch; }
+.cta { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 22px; border-radius: 14px; font: 600 17px/1 var(--ui);
+  background: var(--ink); color: var(--bg); text-decoration: none; border: 0; }
+.btn[aria-disabled="true"] { cursor: default; }
+.btn svg { width: 20px; height: 22px; }
+.note { font: 21px/1.2 var(--vt); color: var(--ink-2); }
+
+.viewfinder { position: relative; background: var(--body); border-radius: 42px; padding: 14px; box-shadow: 0 30px 60px rgba(0,0,0,.28);
+  max-width: 340px; justify-self: center; width: 100%; }
+.viewfinder img { border-radius: 30px; width: 100%; }
+.viewfinder::before, .viewfinder::after { content: ""; position: absolute; width: 38px; height: 38px; border: 3px solid var(--osd); opacity: .85; }
+.viewfinder::before { top: -12px; left: -12px; border-right: 0; border-bottom: 0; }
+.viewfinder::after { bottom: -12px; right: -12px; border-left: 0; border-top: 0; }
+
+/* Sections */
+section { padding: 64px 0; }
+.band { background: var(--bg-2); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+h2 { font: 800 clamp(28px, 3.6vw, 40px)/1.1 var(--ui); letter-spacing: -.015em; margin: 0 0 10px; text-wrap: balance; }
+.kicker { font: 24px/1 var(--vt); color: var(--amber-ink); margin: 0 0 12px; }
+.sub { color: var(--ink-2); max-width: 60ch; margin: 0 0 32px; }
+
+/* Four tapes in the box: cassette cards */
+.tapes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.tape { background: var(--body); border-radius: 12px; padding: 12px 12px 16px; color: #f2eee3; box-shadow: 0 12px 26px rgba(0,0,0,.18); min-width: 0; }
+.tape .spine { background: var(--cream); color: #151812; border-top: 9px solid var(--c); padding: 6px 12px 4px; font: 26px/1.1 var(--mk); transform: rotate(-1deg); margin: 0 0 12px; }
+.tape img { border-radius: 6px; aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+.tape .era { font: 22px/1.1 var(--vt); color: #f0b43c; margin: 12px 0 4px; }
+.tape p { margin: 0; font-size: 15px; color: #c9cdc0; }
+.free { margin-top: 20px; font: 22px/1.2 var(--vt); }
+
+/* Shoot now, change later */
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; }
+.split .shot { background: var(--body); border-radius: 36px; padding: 12px; max-width: 320px; justify-self: center; width: 100%; }
+.split .shot img { border-radius: 26px; }
+.dials { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+.dials li { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 14px; align-items: baseline; border-bottom: 1px dashed var(--rule); padding-bottom: 12px; }
+.dials b { font: 22px/1.1 var(--vt); font-weight: 400; color: var(--amber-ink); }
+
+/* Timecode track */
+.track { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 3px solid var(--ink); }
+.track li { padding: 16px 18px 0 0; position: relative; min-width: 0; }
+.track li::before { content: ""; position: absolute; top: -10px; left: 0; width: 16px; height: 16px; border-radius: 50%; background: var(--rec); }
+.track .tc { font: 26px/1 var(--vt); display: block; margin: 8px 0 8px; color: var(--amber-ink); }
+.track h3 { margin: 0 0 6px; font: 700 19px/1.25 var(--ui); }
+.track p { margin: 0; color: var(--ink-2); font-size: 16px; }
+
+/* Privacy band: the camcorder body in both modes */
+.private { background: var(--body); color: #f2eee3; }
+.private h2 { color: #f2eee3; }
+.private .kicker { color: #f0b43c; }
+.private .sub { color: #c9cdc0; }
+.private a { color: #63c493; }
+.private ul { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.private li { border-left: 3px solid #f0412f; padding: 2px 0 2px 14px; }
+.private li b { display: block; font: 24px/1.1 var(--vt); font-weight: 400; color: #f0b43c; margin-bottom: 4px; }
+
+/* Text pages (privacy, support) */
+.page { padding: 48px 0 64px; }
+.page .wrap { max-width: 760px; }
+.page h1 { font-size: clamp(32px, 5vw, 46px); }
+.page h2 { font-size: 24px; margin: 34px 0 10px; }
+.page p, .page li { color: var(--ink); }
+.page .updated { font: 22px/1 var(--vt); color: var(--ink-2); margin: 0 0 24px; }
+.page ul { padding-left: 22px; }
+.page li { margin: 6px 0; }
+.table { overflow-x: auto; }
+details { border-bottom: 1px solid var(--rule); padding: 4px 0; }
+summary { cursor: pointer; font-weight: 700; padding: 12px 0; min-height: 44px; list-style-position: outside; }
+details p, details ul { margin: 0 0 14px; }
+.mail { font-weight: 700; }
+
+footer { border-top: 1px solid var(--rule); padding: 28px 0 40px; color: var(--ink-2); font-size: 15px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 10px 22px; justify-content: space-between; }
+footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+footer a { color: var(--ink-2); display: inline-flex; align-items: center; min-height: 44px; }
+
+@media (max-width: 900px) {
+  .hero .wrap, .split { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .hero .wrap { padding-top: 36px; }
+  .tapes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .track { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 28px; }
+  .private ul { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 520px) {
+  .label .name { font-size: 50px; }
+  .tapes { grid-template-columns: minmax(0, 1fr); }
+  .track { grid-template-columns: minmax(0, 1fr); border-top: 0; border-left: 3px solid var(--ink); padding-left: 18px; }
+  .track li::before { top: 20px; left: -28px; }
+  .dials li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  section { padding: 48px 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }

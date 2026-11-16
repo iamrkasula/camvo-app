@@ -1,0 +1,4 @@
+# GitHub project sites don't serve robots.txt at the domain root; submit sitemap.xml in Search Console instead.
+User-agent: *
+Allow: /
+Sitemap: https://iamrkasula.github.io/camvo-app/sitemap.xml
